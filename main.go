@@ -6,6 +6,7 @@ import (
   "os"
 
   "github.com/go-chi/chi"
+  "github.com/go-chi/chi/middleware"
 )
 
 func main() {
@@ -19,12 +20,13 @@ func main() {
 
   r := chi.NewRouter()
 
+  r.Use(middleware.Logger)
+
   r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-    w.Header().Set("Content-Type", "text/plain")
     w.Write([]byte("Hello World!"))
   })
 
   r.Mount("/posts", postsResource{}.Routes())
 
-  log.Fatal(http.ListenAndServe(":" + port, r))
+  log.Fatal(http.ListenAndServe(":"+port, r))
 }
